@@ -1,8 +1,18 @@
 .App {
-  padding: 30px;
-  display: flex;
+    padding: 30px;
+    display: flex;
+    /*justify-content: center;*/
+    /*align-items: center;*/
 }
 
 .App > div {
-  margin-right: 50px;
+    margin-right: 50px;
+}
+
+.todolist {
+    background-color: #a8f8aa;
+}
+
+.title {
+    /*border: 1px solid #ffb551;*/
 }
