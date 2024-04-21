@@ -52,6 +52,18 @@ export const Todolist = (
 
     const tasksForTodoList = getTasksForTodoList(tasks, filter)
 
+    const tasksList: Array<JSX.Element> = tasksForTodoList.map(task => {
+            const removeTaskHandler = () => removeTask((task.id))
+
+            return (
+                <li key={task.id}>
+                    <input type="checkbox" checked={task.isDone}/>
+                    <span>{task.title}</span>
+                    <button onClick={removeTaskHandler}>x</button>
+                </li>
+            )
+    })
+
     return (
         <div className={"todolist"}>
             <h3 className={"title"}>{title}</h3>
@@ -67,17 +79,19 @@ export const Todolist = (
                 <p>Тасок нет</p>
             ) : (
                 <ul>
-                    {tasksForTodoList.map(task => {
-                        const removeTaskHandler = () => removeTask((task.id))
+                    {tasksList}
 
-                        return (
-                            <li key={task.id}>
-                                <input type="checkbox" checked={task.isDone}/>
-                                <span>{task.title}</span>
-                                <button onClick={removeTaskHandler}>x</button>
-                            </li>
-                        )
-                    })}
+                    {/*{tasksForTodoList.map(task => {*/}
+                    {/*    const removeTaskHandler = () => removeTask((task.id))*/}
+
+                    {/*    return (*/}
+                    {/*        <li key={task.id}>*/}
+                    {/*            <input type="checkbox" checked={task.isDone}/>*/}
+                    {/*            <span>{task.title}</span>*/}
+                    {/*            <button onClick={removeTaskHandler}>x</button>*/}
+                    {/*        </li>*/}
+                    {/*    )*/}
+                    {/*})}*/}
                 </ul>
             )}
 
