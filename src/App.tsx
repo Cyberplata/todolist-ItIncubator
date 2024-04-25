@@ -1,12 +1,8 @@
 import React, {useState} from 'react';
 import './App.css';
 import {TaskType, Todolist} from "./Todolist";
-
-// export type TaskType = {
-//     id: number
-//     title: string
-//     isDone: boolean
-// }
+import * as crypto from "crypto";
+import { v1 } from 'uuid';
 
 export type FilterValuesType = "all" | "active" | "completed"
 
@@ -14,19 +10,15 @@ function App() {
 
     // Global state
     const [tasks, setTasks] = useState<TaskType[]>([
-        {id: 1, title: 'HTML&CSS', isDone: true},
-        {id: 2, title: 'JS', isDone: true},
-        {id: 3, title: 'React', isDone: false},
-        {id: 4, title: 'Redux', isDone: false},
-        {id: 5, title: 'Typescript', isDone: false},
-        {id: 6, title: 'RTK query', isDone: false},
+        {id: v1(), title: 'HTML&CSS', isDone: true},
+        {id: v1(), title: 'JS', isDone: true},
+        {id: v1(), title: 'React', isDone: false},
+        {id: v1(), title: 'Redux', isDone: false},
+        {id: v1(), title: 'Typescript', isDone: false},
+        {id: v1(), title: 'RTK query', isDone: false},
     ])
-    // const state = result[0]
-    // const setState = result[1]
 
-    // console.log(result)
-
-    const removeTask = (taskId: number) => {
+    const removeTask = (taskId: string) => {
         // удалили таску из массива
         // new version of state with changes
         // const newState = []
@@ -40,6 +32,16 @@ function App() {
         setTasks(newState)
     }
 
+    const addTask = (title: string) => {
+        const newTask: TaskType = {
+            id: v1(),
+            title,
+            isDone: false
+        }
+        const newState = [newTask, ...tasks]
+        setTasks(newState)
+    }
+
     return (
         <div className="App">
             <Todolist
@@ -49,6 +51,7 @@ function App() {
                 tasks={tasks}
                 date={'26.03.2024'}
                 removeTask={removeTask}
+                addTask={addTask}
                 // changeTodoListFilter={changeTodoListFilter}
             />
             {/*<Todolist title="Songs" subtitle="Let's go everything" description="Cool music" tasks={tasks2}/>*/}
