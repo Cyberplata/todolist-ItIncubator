@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react'
+import React, {ChangeEvent, useRef, useState} from 'react'
 import {Button} from "./Button";
 import {FilterValuesType} from "./App";
 
@@ -39,7 +39,9 @@ export const Todolist = (
     //     setFilter(nextFilter)
     // }
 
-    const [valueInput, setValueInput] = useState("")
+    const taskTitleInput = useRef<HTMLInputElement>(null) //Создадим ссылку, которая будет сохранять стабильность
+
+    // const [valueInput, setValueInput] = useState("")
 
     // UI
     const getTasksForTodoList = (allTasks: Array<TaskType>, nextFilterValue: FilterValuesType) => {
@@ -52,7 +54,6 @@ export const Todolist = (
                 return allTasks;
         }
     }
-
     const tasksForTodoList = getTasksForTodoList(tasks, filter)
 
     const tasksList: Array<JSX.Element> = tasksForTodoList.map(task => {
@@ -62,24 +63,34 @@ export const Todolist = (
                 <li key={task.id}>
                     <input type="checkbox" checked={task.isDone}/>
                     <span>{task.title}</span>
-                    <Button onClick={removeTaskHandler} title={'+'}/>
+                    <Button onClick={removeTaskHandler} title={'x'}/>
                 </li>
             )
     })
 
-    const onChangeHandlerInput = (event: ChangeEvent<HTMLInputElement> ) => {
-        // console.dir(event)
-        setValueInput(event.currentTarget.value)
-        console.log(event.currentTarget.value)
-    }
+    // const onChangeHandlerInput = (event: ChangeEvent<HTMLInputElement> ) => {
+    //     // console.dir(event)
+    //     setValueInput(event.currentTarget.value)
+    //     console.log(event.currentTarget.value)
+    // }
 
-    const onClickHandlerButton = () => {
-        addTask(valueInput)
-        setValueInput('')
-        // console.log('setValueInput', setValueInput)
-    }
+    // const onClickHandlerButton = () => {
+    //     addTask(valueInput)
+    //     setValueInput('')
+    //     // console.log('setValueInput', setValueInput)
+    // }
 
     const onClickHandlerCreator = (filter: FilterValuesType) => () => setFilter(filter)
+    const onClickAddTaskHandler = () => {
+        // Пишем условие, чтобы реакту подсказать, если инпут создан, то добавляй значение. Получается мы начинаем всю движуху с инпутом, только после нажатия на кнопку - это не очень
+        if (taskTitleInput.current) {
+            console.log(taskTitleInput.current) // <input>
+
+            const newTaskTitle = taskTitleInput.current.value
+            addTask(newTaskTitle)
+            taskTitleInput.current.value = ""
+        }
+    }
 
     return (
         <div className={"todolist"}>
@@ -88,8 +99,11 @@ export const Todolist = (
             <p>{description}</p>
 
             <div>
-                <input value={valueInput} onChange={onChangeHandlerInput}/>
-                <Button onClick={onClickHandlerButton} title={'+'}/>
+                <input ref={taskTitleInput}/>
+                {/*<input value={valueInput} onChange={onChangeHandlerInput}/>*/}
+
+                <Button onClick={onClickAddTaskHandler} title={'+'}/>
+                {/*<Button onClick={onClickHandlerButton} title={'+'}/>*/}
             </div>
 
             {tasks.length === 0 ? (
