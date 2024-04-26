@@ -1,5 +1,4 @@
-import React, {useState} from 'react'
-// import {TaskType} from "./App";
+import React, {ChangeEvent, useState} from 'react'
 import {Button} from "./Button";
 import {FilterValuesType} from "./App";
 
@@ -40,6 +39,8 @@ export const Todolist = (
     //     setFilter(nextFilter)
     // }
 
+    const [valueInput, setValueInput] = useState("")
+
     // UI
     const getTasksForTodoList = (allTasks: Array<TaskType>, nextFilterValue: FilterValuesType) => {
         switch (nextFilterValue) {
@@ -66,18 +67,19 @@ export const Todolist = (
             )
     })
 
-    const onChangeHandlerInput = () => {
-
+    const onChangeHandlerInput = (event: ChangeEvent<HTMLInputElement> ) => {
+        // console.dir(event)
+        setValueInput(event.currentTarget.value)
+        console.log(event.currentTarget.value)
     }
 
     const onClickHandlerButton = () => {
-        addTask('Hi')
-        // setTasks('')
+        addTask(valueInput)
+        setValueInput('')
+        // console.log('setValueInput', setValueInput)
     }
 
-    const onClickHandlerCreator = (filter: FilterValuesType) => {
-        return () => setFilter(filter)
-    }
+    const onClickHandlerCreator = (filter: FilterValuesType) => () => setFilter(filter)
 
     return (
         <div className={"todolist"}>
@@ -86,8 +88,8 @@ export const Todolist = (
             <p>{description}</p>
 
             <div>
-                <input onChange={onChangeHandlerInput}/>
-                <Button onClick={() => onClickHandlerButton()} title={'+'}/>
+                <input value={valueInput} onChange={onChangeHandlerInput}/>
+                <Button onClick={onClickHandlerButton} title={'+'}/>
             </div>
 
             {tasks.length === 0 ? (
