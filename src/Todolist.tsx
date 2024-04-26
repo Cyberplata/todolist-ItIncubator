@@ -48,9 +48,9 @@ export const Todolist = (
     }
     const tasksForTodoList = getTasksForTodoList(tasks, filter)
 
-    const tasksList: Array<JSX.Element> = tasksForTodoList.map(task => {
+    const tasksList: Array<JSX.Element> | JSX.Element = tasksForTodoList.length
+        ? tasksForTodoList.map(task => {
             const removeTaskHandler = () => removeTask((task.id))
-
             return (
                 <li key={task.id}>
                     <input type="checkbox" checked={task.isDone}/>
@@ -58,14 +58,14 @@ export const Todolist = (
                     <Button onClick={removeTaskHandler} title={'x'}/>
                 </li>
             )
-    })
+        })
+        : <div>Your tasksList is empty</div>
 
     const onClickHandlerCreator = (filter: FilterValuesType) => () => setFilter(filter)
     const onClickAddTaskHandler = () => {
         addTask(taskTitle)
         setTaskTitle('')
     }
-
     const isTitleTooLong = taskTitle.length > 15
 
     return (
@@ -78,7 +78,7 @@ export const Todolist = (
                 <input
                     value={taskTitle}
                     onChange={(e) => {
-                       setTaskTitle(e.currentTarget.value)
+                        setTaskTitle(e.currentTarget.value)
                     }}
                 />
 
@@ -87,21 +87,22 @@ export const Todolist = (
                     onClick={onClickAddTaskHandler}
                     title={'+'}
                 />
-                { isTitleTooLong && <div>Your task title is too long</div> } // условный рендеринг
+                {/*// условный рендеринг*/}
+                {isTitleTooLong && <div>Your task title is too long</div>}
             </div>
 
-            {tasks.length === 0 ? (
-                <p>Тасок нет</p>
-            ) : (
+            {/*{tasks.length === 0 ? (*/}
+            {/*    <p>Тасок нет</p>*/}
+            {/*) : (*/}
                 <ul>
                     {tasksList}
                 </ul>
-            )}
+            {/*)}*/}
 
             <div>
-                <Button onClick={onClickHandlerCreator("all")} title={"All"} />
-                <Button onClick={onClickHandlerCreator("active")} title={"Active"} />
-                <Button onClick={onClickHandlerCreator("completed")} title={"Completed"} />
+                <Button onClick={onClickHandlerCreator("all")} title={"All"}/>
+                <Button onClick={onClickHandlerCreator("active")} title={"Active"}/>
+                <Button onClick={onClickHandlerCreator("completed")} title={"Completed"}/>
             </div>
             <div>{date}</div>
         </div>
