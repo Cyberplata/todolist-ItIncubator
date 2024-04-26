@@ -16,6 +16,7 @@ type PropsType = {
     date?: string
     removeTask: (taskId: string) => void
     addTask: (title: string) => void
+    // changeTodoListFilter: (nextFilter: FilterValuesType) => void
 }
 
 export const Todolist = (
@@ -27,13 +28,20 @@ export const Todolist = (
         date,
         removeTask,
         addTask,
+        // changeTodoListFilter
     }: PropsType) => {
+    // const {title, subtitle, description, tasks} = props
 
 
     // Local state
     const [filter, setFilter] = useState<FilterValuesType>("all")
+    // const changeTodoListFilter = (nextFilter: FilterValuesType) => {
+    //     setFilter(nextFilter)
+    // }
 
-    const [taskTitle, setTaskTitle] = useState("")
+    const taskTitleInput = useRef<HTMLInputElement>(null) //Создадим ссылку, которая будет сохранять стабильность
+
+    // const [valueInput, setValueInput] = useState("")
 
     // UI
     const getTasksForTodoList = (allTasks: Array<TaskType>, nextFilterValue: FilterValuesType) => {
@@ -60,13 +68,29 @@ export const Todolist = (
             )
     })
 
+    // const onChangeHandlerInput = (event: ChangeEvent<HTMLInputElement> ) => {
+    //     // console.dir(event)
+    //     setValueInput(event.currentTarget.value)
+    //     console.log(event.currentTarget.value)
+    // }
+
+    // const onClickHandlerButton = () => {
+    //     addTask(valueInput)
+    //     setValueInput('')
+    //     // console.log('setValueInput', setValueInput)
+    // }
+
     const onClickHandlerCreator = (filter: FilterValuesType) => () => setFilter(filter)
     const onClickAddTaskHandler = () => {
-        addTask(taskTitle)
-        setTaskTitle('')
-    }
+        // Пишем условие, чтобы реакту подсказать, если инпут создан, то добавляй значение. Получается мы начинаем всю движуху с инпутом, только после нажатия на кнопку - это не очень
+        if (taskTitleInput.current) {
+            console.log(taskTitleInput.current) // <input>
 
-    const isTitleTooLong = taskTitle.length > 15
+            const newTaskTitle = taskTitleInput.current.value
+            addTask(newTaskTitle)
+            taskTitleInput.current.value = ""
+        }
+    }
 
     return (
         <div className={"todolist"}>
@@ -75,19 +99,11 @@ export const Todolist = (
             <p>{description}</p>
 
             <div>
-                <input
-                    value={taskTitle}
-                    onChange={(e) => {
-                       setTaskTitle(e.currentTarget.value)
-                    }}
-                />
+                <input ref={taskTitleInput}/>
+                {/*<input value={valueInput} onChange={onChangeHandlerInput}/>*/}
 
-                <Button
-                    disabled={!taskTitle || isTitleTooLong}
-                    onClick={onClickAddTaskHandler}
-                    title={'+'}
-                />
-                { isTitleTooLong && <div>Your task title is too long</div> } // условный рендеринг
+                <Button onClick={onClickAddTaskHandler} title={'+'}/>
+                {/*<Button onClick={onClickHandlerButton} title={'+'}/>*/}
             </div>
 
             {tasks.length === 0 ? (
