@@ -1,6 +1,7 @@
-import React, {ChangeEvent, useRef, useState} from 'react'
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react'
 import {Button} from "./Button";
 import {FilterValuesType} from "./App";
+
 
 export type TaskType = {
     id: string
@@ -32,7 +33,6 @@ export const Todolist = (
 
     // Local state
     const [filter, setFilter] = useState<FilterValuesType>("all")
-
     const [taskTitle, setTaskTitle] = useState("")
 
     // UI
@@ -47,26 +47,34 @@ export const Todolist = (
         }
     }
     const tasksForTodoList = getTasksForTodoList(tasks, filter)
+    const isTitleTooLong = taskTitle.length > 15
+    const ifTaskCanAdded = taskTitle && !isTitleTooLong
 
     const tasksList: Array<JSX.Element> | JSX.Element = tasksForTodoList.length
         ? tasksForTodoList.map(task => {
-            const removeTaskHandler = () => removeTask((task.id))
+            const onClickRemoveTaskHandler = () => removeTask((task.id))
             return (
                 <li key={task.id}>
                     <input type="checkbox" checked={task.isDone}/>
                     <span>{task.title}</span>
-                    <Button onClick={removeTaskHandler} title={'x'}/>
+                    <Button onClick={onClickRemoveTaskHandler} title={'x'}/>
                 </li>
             )
         })
         : <div>Your tasksList is empty</div>
 
+    // Handlers
     const onClickHandlerCreator = (filter: FilterValuesType) => () => setFilter(filter)
     const onClickAddTaskHandler = () => {
         addTask(taskTitle)
         setTaskTitle('')
     }
-    const isTitleTooLong = taskTitle.length > 15
+    const onChangeSetTaskTitle = (e: ChangeEvent<HTMLInputElement>) => setTaskTitle(e.currentTarget.value)
+    const onKeyDownAddTaskHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && ifTaskCanAdded) {
+            onClickAddTaskHandler()
+        }
+    }
 
     return (
         <div className={"todolist"}>
@@ -77,13 +85,12 @@ export const Todolist = (
             <div>
                 <input
                     value={taskTitle}
-                    onChange={(e) => {
-                        setTaskTitle(e.currentTarget.value)
-                    }}
+                    onChange={onChangeSetTaskTitle}
+                    onKeyDown={onKeyDownAddTaskHandler}
                 />
 
                 <Button
-                    disabled={!taskTitle || isTitleTooLong}
+                    disabled={!ifTaskCanAdded}
                     onClick={onClickAddTaskHandler}
                     title={'+'}
                 />
@@ -91,13 +98,9 @@ export const Todolist = (
                 {isTitleTooLong && <div>Your task title is too long</div>}
             </div>
 
-            {/*{tasks.length === 0 ? (*/}
-            {/*    <p>Тасок нет</p>*/}
-            {/*) : (*/}
-                <ul>
-                    {tasksList}
-                </ul>
-            {/*)}*/}
+            <ul>
+                {tasksList}
+            </ul>
 
             <div>
                 <Button onClick={onClickHandlerCreator("all")} title={"All"}/>
