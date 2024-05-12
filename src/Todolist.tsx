@@ -36,6 +36,7 @@ export const Todolist = (
     // Local state
     const [filter, setFilter] = useState<FilterValuesType>("all")
     const [taskTitle, setTaskTitle] = useState("")
+    const [taskInputError, setTaskInputError] = useState<string | null>(null)
 
     // UI
     const getTasksForTodoList = (allTasks: Array<TaskType>, nextFilterValue: FilterValuesType) => {
@@ -63,7 +64,7 @@ export const Todolist = (
                         checked={task.isDone}
                         onChange={onChangeSetTaskStatusHandler}
                     />
-                    <span>{task.title}</span>
+                    <span className={task.isDone ? "task-done" : "task"}>{task.title}</span>
                     <Button onClick={onClickRemoveTaskHandler} title={'x'}/>
                 </li>
             )
@@ -73,10 +74,18 @@ export const Todolist = (
     // Handlers
     const onClickHandlerCreator = (filter: FilterValuesType) => () => setFilter(filter)
     const onClickAddTaskHandler = () => {
-        addTask(taskTitle)
-        setTaskTitle('')
+        const trimmedTaskTitle = taskTitle.trim()
+        if (trimmedTaskTitle) {
+            addTask(trimmedTaskTitle)
+        } else {
+            setTaskInputError("Title is required")
+        }
+        setTaskTitle("")
     }
-    const onChangeSetTaskTitle = (e: ChangeEvent<HTMLInputElement>) => setTaskTitle(e.currentTarget.value)
+    const onChangeSetTaskTitle = (e: ChangeEvent<HTMLInputElement>) => {
+        setTaskInputError(null)
+        setTaskTitle(e.currentTarget.value)
+    }
     const onKeyDownAddTaskHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && ifTaskCanAdded) {
             onClickAddTaskHandler()
@@ -101,18 +110,25 @@ export const Todolist = (
                     onClick={onClickAddTaskHandler}
                     title={'+'}
                 />
-                {/*// условный рендеринг*/}
+                {/* условный рендеринг*/}
                 {isTitleTooLong && <div>Your task title is too long</div>}
+                {!!taskInputError && <div>{taskInputError}</div>}
             </div>
 
             <ul>
-                {tasksList}
+            {tasksList}
             </ul>
 
             <div>
-                <Button onClick={onClickHandlerCreator("all")} title={"All"}/>
-                <Button onClick={onClickHandlerCreator("active")} title={"Active"}/>
-                <Button onClick={onClickHandlerCreator("completed")} title={"Completed"}/>
+                <Button className={filter === "all" ? "filter-btn-active" : ""}
+                        onClick={onClickHandlerCreator("all")}
+                        title={"All"}/>
+                <Button className={filter === "active" ? "filter-btn-active" : ""}
+                        onClick={onClickHandlerCreator("active")}
+                        title={"Active"}/>
+                <Button className={filter === "completed" ? "filter-btn-active" : ""}
+                        onClick={onClickHandlerCreator("completed")}
+                        title={"Completed"}/>
             </div>
             <div>{date}</div>
         </div>

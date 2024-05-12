@@ -16,3 +16,20 @@
 .title {
     /*border: 1px solid #ffb551;*/
 }
+
+.task {
+    font-weight: bold;
+}
+
+.task-done {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+.filter-btn-active {
+    background-color: chocolate;
+    color: white;
+    font-weight: bold;
+    border: 2px solid chocolate;
+    border-radius: 3px;
+}
