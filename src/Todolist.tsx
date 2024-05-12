@@ -17,6 +17,7 @@ type PropsType = {
     date?: string
     removeTask: (taskId: string) => void
     addTask: (title: string) => void
+    changeTaskStatus: (taskId: string, newIsDone: boolean) => void
 }
 
 export const Todolist = (
@@ -28,6 +29,7 @@ export const Todolist = (
         date,
         removeTask,
         addTask,
+        changeTaskStatus
     }: PropsType) => {
 
 
@@ -53,9 +55,14 @@ export const Todolist = (
     const tasksList: Array<JSX.Element> | JSX.Element = tasksForTodoList.length
         ? tasksForTodoList.map(task => {
             const onClickRemoveTaskHandler = () => removeTask((task.id))
+            const onChangeSetTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => changeTaskStatus(task.id, e.currentTarget.checked)
             return (
                 <li key={task.id}>
-                    <input type="checkbox" checked={task.isDone}/>
+                    <input
+                        type="checkbox"
+                        checked={task.isDone}
+                        onChange={onChangeSetTaskStatusHandler}
+                    />
                     <span>{task.title}</span>
                     <Button onClick={onClickRemoveTaskHandler} title={'x'}/>
                 </li>

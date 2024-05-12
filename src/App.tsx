@@ -4,6 +4,11 @@ import {TaskType, Todolist} from "./Todolist";
 import * as crypto from "crypto";
 import { v1 } from 'uuid';
 
+//Create +
+//Read + (filter, type, sort, search, pagination)
+//Update status +, update title -
+//Delete +
+
 export type FilterValuesType = "all" | "active" | "completed"
 
 function App() {
@@ -41,6 +46,13 @@ function App() {
         const newState = [newTask, ...tasks]
         setTasks(newState)
     }
+    const changeTaskStatus = (taskId: string, newIsDone: boolean) => {
+        const task = tasks.find(t => t.id === taskId)
+        if (task) {
+            task.isDone = newIsDone
+            setTasks([...tasks])
+        }
+    }
 
     return (
         <div className="App">
@@ -52,6 +64,7 @@ function App() {
                 date={'26.03.2024'}
                 removeTask={removeTask}
                 addTask={addTask}
+                changeTaskStatus={changeTaskStatus}
                 // changeTodoListFilter={changeTodoListFilter}
             />
             {/*<Todolist title="Songs" subtitle="Let's go everything" description="Cool music" tasks={tasks2}/>*/}
