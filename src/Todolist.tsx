@@ -83,10 +83,10 @@ export const Todolist = (
         setTaskTitle("")
     }
     const onChangeSetTaskTitle = (e: ChangeEvent<HTMLInputElement>) => {
-        setTaskInputError(null)
         setTaskTitle(e.currentTarget.value)
     }
     const onKeyDownAddTaskHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        setTaskInputError(null)
         if (e.key === "Enter" && ifTaskCanAdded) {
             onClickAddTaskHandler()
         }
@@ -100,6 +100,7 @@ export const Todolist = (
 
             <div>
                 <input
+                    className={taskInputError ? "task-input-error" : ""}
                     value={taskTitle}
                     onChange={onChangeSetTaskTitle}
                     onKeyDown={onKeyDownAddTaskHandler}
@@ -112,7 +113,7 @@ export const Todolist = (
                 />
                 {/* условный рендеринг*/}
                 {isTitleTooLong && <div>Your task title is too long</div>}
-                {!!taskInputError && <div>{taskInputError}</div>}
+                {taskInputError && <div className="task-input-error-message">{taskInputError}</div>}
             </div>
 
             <ul>
