@@ -3,6 +3,7 @@ import {Todolist} from "./Todolist";
 import {useReducer, useState} from "react";
 import {v1} from "uuid";
 import {addTaskAC, removeTaskAC, taskReducer} from "./module/taskReducer";
+import {changeFilterAC, filterReducer} from "./module/filterReducer";
 
 export type TaskType = {
     id: string
@@ -20,7 +21,7 @@ function App() {
         {id: v1(), title: 'ReactJS', isDone: false},
     ])
 
-    const [filter, setFilter] = useState<FilterValuesType>('all')
+    const [filter, dispatchFilter] = useReducer(filterReducer, 'all')
 
     const removeTask = (taskId: string) => {
         // const filteredTasks = tasks.filter((task) => {
@@ -38,11 +39,12 @@ function App() {
         // }
         // const newTasks = [newTask, ...tasks]
         // setTasks(newTasks)
-		dispatchTasks(addTaskAC(title))
+        dispatchTasks(addTaskAC(title))
     }
 
     const changeFilter = (filter: FilterValuesType) => {
-        setFilter(filter)
+        // setFilter(filter)
+        dispatchFilter(changeFilterAC(filter))
     }
 
     let tasksForTodolist = tasks
