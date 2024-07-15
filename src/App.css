@@ -1,46 +1,8 @@
 .App {
-    padding: 30px;
-    display: flex;
-    /*justify-content: center;*/
-    /*align-items: center;*/
+  padding: 30px;
+  display: flex;
 }
 
 .App > div {
-    margin-right: 50px;
-}
-
-.todolist {
-    background-color: #a8f8aa;
-}
-
-.title {
-    /*border: 1px solid #ffb551;*/
-}
-
-.task {
-    font-weight: bold;
-}
-
-.task-done {
-    text-decoration: line-through;
-    opacity: 0.5;
-}
-
-.filter-btn-active {
-    background-color: chocolate;
-    color: white;
-    font-weight: bold;
-    border: 2px solid chocolate;
-    border-radius: 3px;
-}
-
-.task-input-error {
-    border: 3px solid #ff0101;
-    border-radius: 3px;
-    outline: none;
-}
-
-.task-input-error-message {
-    font-weight: bold;
-    color: #ff3c3c;
+  margin-right: 50px;
 }
